@@ -1,4 +1,4 @@
-/*global $: false, console: false */
+/*global $: false, console: false, requestAnimationFrame: false, TWEEN: false */
 /*jslint browser: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4 */
 
 /*
@@ -28,7 +28,7 @@ FAUX.main = {
         self.spheres = [];
 
         self.spheres.push(Object.create(FAUX.Sphere));
-        
+
         self.spheres[0].x = 50;
         self.spheres[0].y = 50;
         self.spheres[0].z = 0;
@@ -47,7 +47,6 @@ FAUX.main = {
         }
 
         requestAnimationFrame(draw);
-
     },
     moveSphere: function (sphere, x, y, z, radius) {
         var self = this,
@@ -58,9 +57,10 @@ FAUX.main = {
             y: typeof y === 'number' ? y : sphere.y,
             z: typeof z === 'number' ? z : sphere.z,
             radius: typeof radius === 'number' ? radius : sphere.radius
-        }, 2000);
+        }, 1000);
 
         tween.easing(TWEEN.Easing.Quadratic.In);
+
         tween.start();
     },
     drawSpheres: function () {
@@ -75,7 +75,6 @@ FAUX.main = {
             sphere = self.spheres[i];
             FAUX.renderer.drawSphere(sphere.x, sphere.y, sphere.z, sphere.radius);
         }
-        
     }
 };
 
