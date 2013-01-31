@@ -21,8 +21,6 @@
 
 var FAUX = FAUX || {};
 
-lasthex = undefined;
-
 FAUX.renderer = {
     init: function () {
         var self = this,
@@ -60,8 +58,8 @@ FAUX.renderer = {
 
         // Simulate "fog" by transitioning to white as distance increases
 
-        colorValue = ( z > -255 ? -1 * Math.floor(z) : 255 ).toString(16); // convert base 10 to hexadecimal
-        
+        colorValue = (z > -255 ? -1 * Math.floor(z) : 255).toString(16); // convert base 10 to hexadecimal
+
         if (colorValue.length > 1) {
             colorValue = '#' + colorValue + colorValue + colorValue;
         } else {
@@ -71,7 +69,7 @@ FAUX.renderer = {
         // Draw the circle
 
         self.ctx.beginPath();
-        self.ctx.arc(x, y, scaledRadius, 0, 2 * Math.PI, false);        
+        self.ctx.arc(x, y, scaledRadius, 0, 2 * Math.PI, false);
         self.ctx.fillStyle = colorValue;
         self.ctx.fill();
         self.ctx.lineWidth = 1;

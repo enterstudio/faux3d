@@ -1,4 +1,4 @@
-/*global $: false, console: false, requestAnimationFrame: false, TWEEN: false */
+/*global $: false, console: false, requestAnimationFrame: false, TWEEN: false, createjs: false, stats: false */
 /*jslint browser: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4 */
 
 /*
@@ -23,44 +23,81 @@ var FAUX = FAUX || {};
 
 FAUX.main = {
     init: function () {
-        var self = this;
+        var self = this,
+            i,
+            ii;
+
+        self.events.parent = self; // Bind root object reference for "events"
+
+        self.isAnimating = false;
 
         self.spheres = [];
 
-        self.spheres.push(Object.create(FAUX.Sphere));
+        for (i = 0, ii = 50; i < ii; i++) {
+            self.spheres.push(Object.create(FAUX.Sphere));
 
-        self.spheres[0].x = 50;
-        self.spheres[0].y = 50;
-        self.spheres[0].z = 0;
-        self.spheres[0].radius = 10;
+            self.spheres[i].x = 0;
+            self.spheres[i].y = 0;
+            self.spheres[i].z = 0;
+            self.spheres[i].radius = 25;
+
+            self.moveSphere(self.spheres[i], 200, 200, 0);
+        }
 
         FAUX.renderer.init();
-        FAUX.main.animate();
+        self.animate();
+    },
+    events: {
+        moveDone: function (sphere) {
+            var self = this.parent,
+                args = arguments;
+
+            //console.log(sphere, 'move done');
+
+            self.moveSphere(sphere,
+                Math.floor(Math.random() * 640),
+                Math.floor(Math.random() * 480),
+                Math.floor(Math.random() * -100));
+        }
     },
     animate: function () {
         var self = this;
 
+        self.isAnimating = true;
+
         function draw() {
-            requestAnimationFrame(draw);
-            TWEEN.update();
-            self.drawSpheres();
+            if (self.isAnimating === true) {
+                requestAnimationFrame(draw);
+                TWEEN.update();
+                stats.update();
+                self.drawSpheres();
+            }
         }
 
         requestAnimationFrame(draw);
     },
+    stopAnimation: function () {
+        var self = this;
+
+        self.isAnimating = false;
+
+        // TODO : Stop tweening engine
+    },
     moveSphere: function (sphere, x, y, z, radius) {
         var self = this,
+            tweenTarget,
             tween;
 
-        tween = new TWEEN.Tween(self.spheres[0]).to({
+        tweenTarget = {
             x: typeof x === 'number' ? x : sphere.x,
             y: typeof y === 'number' ? y : sphere.y,
             z: typeof z === 'number' ? z : sphere.z,
             radius: typeof radius === 'number' ? radius : sphere.radius
-        }, 1000);
+        };
 
-        tween.easing(TWEEN.Easing.Quadratic.In);
+        tween = new TWEEN.Tween(sphere).to(tweenTarget, 1000);
 
+        tween.onComplete(function () { self.events.moveDone(sphere); });
         tween.start();
     },
     drawSpheres: function () {
@@ -77,7 +114,3 @@ FAUX.main = {
         }
     }
 };
-
-$(document).ready(function () {
-    FAUX.main.init();
-});

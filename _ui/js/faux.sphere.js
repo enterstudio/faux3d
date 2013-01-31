@@ -23,5 +23,8 @@ FAUX.Sphere = {
     x: undefined,
     y: undefined,
     z: undefined,
-    radius: undefined
+    radius: undefined,
+    toString: function () {
+        return '[object Sphere]';
+    }
 };
