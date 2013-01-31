@@ -7,7 +7,7 @@
     VERSION 0.0.1
     AUTHOR gvn
 
-    Renders shit on a Canvas.
+    Renders things on a Canvas.
 
     DEPENDENCIES:
 
@@ -15,11 +15,13 @@
 
     TODO:
 
-    -
+    - Determine scaledRadius value that feels realistic
 
 */
 
 var FAUX = FAUX || {};
+
+lastScaledRadius = undefined;
 
 FAUX.renderer = {
     init: function () {
@@ -44,12 +46,19 @@ FAUX.renderer = {
         // Negative z value is in front of camera, positive is behind.
 
         if (z < 0) {
-            scaledRadius = ( -1 * (10 / z) )  * radius;    
+            scaledRadius = radius + z / 10;
         } else if (z > 0) {
             return; // The sphere is behind the camera and doesn't need rendering
         } else {
             scaledRadius = radius; // z === 0
         }
+
+        if (scaledRadius !== lastScaledRadius) {
+            console.log('z',z, 'scaledRadius',scaledRadius);    
+        }
+
+        lastScaledRadius = scaledRadius;
+        
         
         self.ctx.beginPath();
         self.ctx.arc(x, y, scaledRadius, 0, 2 * Math.PI, false);
