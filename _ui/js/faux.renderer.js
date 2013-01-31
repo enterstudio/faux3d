@@ -72,8 +72,8 @@ FAUX.renderer = {
         self.ctx.arc(x, y, scaledRadius, 0, 2 * Math.PI, false);
         self.ctx.fillStyle = colorValue;
         self.ctx.fill();
-        self.ctx.lineWidth = 1;
-        self.ctx.strokeStyle = 'white';
-        self.ctx.stroke();
+        //self.ctx.lineWidth = 1;
+        //self.ctx.strokeStyle = 'white';
+        //self.ctx.stroke();
     }
 };
