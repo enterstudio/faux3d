@@ -11,10 +11,11 @@
 
     DEPENDENCIES:
 
-    - 
+    - jQuery
 
     TODO:
 
+    - Remove jQuery dependency
     - Determine scaledRadius value that feels realistic
 
 */
@@ -35,6 +36,20 @@ FAUX.renderer = {
         var self = this;
 
         self.ctx.clearRect(0, 0, self.width, self.height);
+    },
+    depthToColor: function (z) {
+        var self = this,
+            colorValue;
+
+        colorValue = (z > -255 ? -1 * Math.floor(z) : 255).toString(16); // convert base 10 to hexadecimal
+
+        if (colorValue.length > 1) {
+            colorValue = '#' + colorValue + colorValue + colorValue;
+        } else {
+            colorValue = '#0' + colorValue + '0' + colorValue + '0' + colorValue;
+        }
+
+        return colorValue;
     },
     drawSphere: function (x, y, z, radius) {
         var self = this,
@@ -58,13 +73,7 @@ FAUX.renderer = {
 
         // Simulate "fog" by transitioning to white as distance increases
 
-        colorValue = (z > -255 ? -1 * Math.floor(z) : 255).toString(16); // convert base 10 to hexadecimal
-
-        if (colorValue.length > 1) {
-            colorValue = '#' + colorValue + colorValue + colorValue;
-        } else {
-            colorValue = '#0' + colorValue + '0' + colorValue + '0' + colorValue;
-        }
+        colorValue = self.depthToColor(z);
 
         // Draw the circle
 
@@ -72,8 +81,20 @@ FAUX.renderer = {
         self.ctx.arc(x, y, scaledRadius, 0, 2 * Math.PI, false);
         self.ctx.fillStyle = colorValue;
         self.ctx.fill();
-        //self.ctx.lineWidth = 1;
-        //self.ctx.strokeStyle = 'white';
-        //self.ctx.stroke();
+
+        // 1px white border
+        self.ctx.lineWidth = 1;
+        self.ctx.strokeStyle = 'white';
+        self.ctx.stroke();
+    },
+    drawLine: function (vertex1, vertex2) {
+        var self = this;
+
+        self.ctx.lineWidth = 1;
+        self.ctx.beginPath();
+        self.ctx.moveTo(vertex1.x, vertex1.y);
+        self.ctx.lineTo(vertex2.x, vertex2.y);
+        self.ctx.strokeStyle = self.depthToColor(vertex1.z);
+        self.ctx.stroke();
     }
 };

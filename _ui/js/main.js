@@ -33,7 +33,7 @@ FAUX.main = {
 
         self.spheres = [];
 
-        for (i = 0, ii = 50; i < ii; i++) {
+        for (i = 0, ii = 10; i < ii; i++) {
             self.spheres.push(Object.create(FAUX.Sphere));
 
             self.spheres[i].x = 0;
@@ -72,6 +72,8 @@ FAUX.main = {
                 requestAnimationFrame(draw);
                 TWEEN.update();
                 stats.update();
+                FAUX.renderer.clear();
+                self.drawLines();
                 self.drawSpheres();
             }
         }
@@ -109,8 +111,6 @@ FAUX.main = {
             ii,
             sphere;
 
-        FAUX.renderer.clear();
-
         // Sort by z-depth
         self.spheres.sort(function (a, b) {
             return a.z > b.z;
@@ -122,6 +122,33 @@ FAUX.main = {
             sphere = self.spheres[i];
             FAUX.renderer.drawSphere(sphere.x, sphere.y, sphere.z, sphere.radius);
             //console.log(i, ' z: ', sphere.z);
+        }
+    },
+    drawLines: function () {
+        var self = this,
+            i,
+            ii,
+            sphere1,
+            sphere2;
+
+        for (i = 0, ii = self.spheres.length; i < ii; i++) {
+            sphere1 = self.spheres[i];
+
+            if (i !== ii - 1) {
+                sphere2 = self.spheres[i + 1];
+            } else {
+                sphere2 = self.spheres[0];
+            }
+
+            FAUX.renderer.drawLine({
+                x: sphere1.x,
+                y: sphere1.y,
+                z: sphere1.z
+            }, {
+                x: sphere2.x,
+                y: sphere2.y,
+                z: sphere2.z
+            });
         }
     }
 };
