@@ -96,5 +96,15 @@ FAUX.renderer = {
         self.ctx.lineTo(vertex2.x, vertex2.y);
         self.ctx.strokeStyle = self.depthToColor(vertex1.z);
         self.ctx.stroke();
+    },
+    drawArc: function (vertex1, middleVertex, vertex2, radius) {
+        var self = this;
+
+        self.ctx.lineWidth = 0.5;
+        self.ctx.beginPath();
+        self.ctx.moveTo(vertex1.x, vertex1.y);
+        self.ctx.arcTo(middleVertex.x, middleVertex.y, vertex2.x, vertex2.y, radius);
+        self.ctx.strokeStyle = self.depthToColor(vertex1.z);
+        self.ctx.stroke();
     }
 };

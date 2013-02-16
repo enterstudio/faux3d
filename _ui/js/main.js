@@ -33,7 +33,7 @@ FAUX.main = {
 
         self.spheres = [];
 
-        for (i = 0, ii = 10; i < ii; i++) {
+        for (i = 0, ii = 25; i < ii; i++) {
             self.spheres.push(Object.create(FAUX.Sphere));
 
             self.spheres[i].x = 0;
@@ -73,8 +73,8 @@ FAUX.main = {
                 TWEEN.update();
                 stats.update();
                 FAUX.renderer.clear();
-                self.drawLines();
-                self.drawSpheres();
+                self.drawArcSkeleton();
+                //self.drawSpheres();
             }
         }
 
@@ -105,6 +105,14 @@ FAUX.main = {
         tween.onComplete(function () { self.events.moveDone(sphere); });
         tween.start();
     },
+    zRotate: function (centerX, centerY, radius, angle) {
+        var self = this;
+
+        return {
+            x: Math.cos(angle) * radius + centerX,
+            y: Math.sin(angle) * radius + centerY
+        };
+    },
     drawSpheres: function () {
         var self = this,
             i,
@@ -116,39 +124,63 @@ FAUX.main = {
             return a.z > b.z;
         });
 
-        //console.log('group');
-
         for (i = 0, ii = self.spheres.length; i < ii; i++) {
             sphere = self.spheres[i];
             FAUX.renderer.drawSphere(sphere.x, sphere.y, sphere.z, sphere.radius);
-            //console.log(i, ' z: ', sphere.z);
         }
     },
-    drawLines: function () {
+    drawArcSkeleton: function () {
         var self = this,
             i,
             ii,
+            j,
+            jj,
             sphere1,
             sphere2;
 
         for (i = 0, ii = self.spheres.length; i < ii; i++) {
-            sphere1 = self.spheres[i];
-
-            if (i !== ii - 1) {
-                sphere2 = self.spheres[i + 1];
-            } else {
-                sphere2 = self.spheres[0];
+            for (j = 0, jj = self.spheres.length; j < jj; j += 1) {
+                if (i !== j) {
+                    FAUX.renderer.drawArc({
+                        x: self.spheres[i].x,
+                        y: self.spheres[i].y,
+                        z: self.spheres[i].z
+                    }, {
+                        x: 320,
+                        y: 240,
+                        z: 0
+                    }, {
+                        x: self.spheres[j].x,
+                        y: self.spheres[j].y,
+                        z: self.spheres[j].z
+                    }, 10);
+                }
             }
+        }
+    },
+    drawLineSkeleton: function () {
+        var self = this,
+            i,
+            ii,
+            j,
+            jj,
+            sphere1,
+            sphere2;
 
-            FAUX.renderer.drawLine({
-                x: sphere1.x,
-                y: sphere1.y,
-                z: sphere1.z
-            }, {
-                x: sphere2.x,
-                y: sphere2.y,
-                z: sphere2.z
-            });
+        for (i = 0, ii = self.spheres.length; i < ii; i++) {
+            for (j = 0, jj = self.spheres.length; j < jj; j += 1) {
+                if (i !== j) {
+                    FAUX.renderer.drawLine({
+                        x: self.spheres[i].x,
+                        y: self.spheres[i].y,
+                        z: self.spheres[i].z
+                    }, {
+                        x: self.spheres[j].x,
+                        y: self.spheres[j].y,
+                        z: self.spheres[j].z
+                    }, 10);
+                }
+            }
         }
     }
 };
