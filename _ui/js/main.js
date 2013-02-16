@@ -33,6 +33,8 @@ FAUX.main = {
 
         self.spheres = [];
 
+        self.mousePosition = {x:0,y:0};
+
         for (i = 0, ii = 25; i < ii; i++) {
             self.spheres.push(Object.create(FAUX.Sphere));
 
@@ -46,6 +48,15 @@ FAUX.main = {
 
         FAUX.renderer.init();
         self.animate();
+
+        $(document).mousemove(function(e){
+            self.mousePosition.x = e.pageX;
+            self.mousePosition.y = e.pageY;
+        }); 
+
+        $('canvas').hover(function() {
+            $('canvas').css('cursor', 'crosshair');
+        });
     },
     events: {
         moveDone: function (sphere) {
@@ -146,8 +157,9 @@ FAUX.main = {
                         y: self.spheres[i].y,
                         z: self.spheres[i].z
                     }, {
-                        x: 320,
-                        y: 240,
+                        // Vanishing Point
+                        x: self.mousePosition.x,
+                        y: self.mousePosition.y,
                         z: 0
                     }, {
                         x: self.spheres[j].x,
