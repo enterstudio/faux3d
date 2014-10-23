@@ -35,6 +35,8 @@ FAUX.main = {
 
         self.mousePosition = {x:0,y:0};
 
+        FAUX.renderer.init();
+
         for (i = 0, ii = 25; i < ii; i++) {
             self.spheres.push(Object.create(FAUX.Sphere));
 
@@ -43,16 +45,16 @@ FAUX.main = {
             self.spheres[i].z = 0;
             self.spheres[i].radius = 25;
 
-            self.moveSphere(self.spheres[i], 320, 240, 0);
+            self.moveSphere(self.spheres[i], FAUX.renderer.width / 2, FAUX.renderer.height / 2, 0);
         }
 
-        FAUX.renderer.init();
+
         self.animate();
 
         $(document).mousemove(function(e){
             self.mousePosition.x = e.pageX;
             self.mousePosition.y = e.pageY;
-        }); 
+        });
 
         $('canvas').hover(function() {
             $('canvas').css('cursor', 'crosshair');
@@ -63,11 +65,9 @@ FAUX.main = {
             var self = this.parent,
                 args = arguments;
 
-            //console.log(sphere, 'move done');
-
             self.moveSphere(sphere,
-                Math.floor(Math.random() * 640),
-                Math.floor(Math.random() * 480),
+                Math.floor(Math.random() * FAUX.renderer.width),
+                Math.floor(Math.random() * FAUX.renderer.height),
                 Math.floor(Math.random() * -100),
                 null,
                 Math.floor(Math.random() * 1000 + 5000));

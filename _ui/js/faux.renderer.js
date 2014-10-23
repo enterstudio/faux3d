@@ -29,8 +29,8 @@ FAUX.renderer = {
 
         self.ctx = canvas.getContext('2d');
 
-        canvas.width = self.width = 640;
-        canvas.height = self.height = 480;
+        canvas.width = self.width = $('html').width();
+        canvas.height = self.height = $('html').height();
     },
     clear: function () {
         var self = this;
@@ -56,7 +56,7 @@ FAUX.renderer = {
             scaledRadius,
             colorValue;
 
-        // "camera" is fixed at z value of 0. 
+        // "camera" is fixed at z value of 0.
         // Negative z value is in front of camera, positive is behind.
 
         if (z < 0) {
